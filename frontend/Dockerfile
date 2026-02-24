@@ -9,6 +9,6 @@ RUN npm run build -- --output-hashing=all
 # Serve using Nginx
 FROM nginx:alpine
 COPY --from=build /app/dist/angular-15-crud /usr/share/nginx/html
-COPY ../nginx/nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
