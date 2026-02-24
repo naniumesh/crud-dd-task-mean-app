@@ -1,22 +1,32 @@
+version: "3.8"
+
 services:
   mongodb:
     image: mongo:6
+    container_name: mongodb
+    restart: always
     volumes:
       - mongo_data:/data/db
 
   backend:
     image: naniumesh/crud-backend:latest
-    ports:
-      - "8080:8080"
+    container_name: backend
+    restart: always
     depends_on:
       - mongodb
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/cruddb
+    ports:
+      - "8080:8080"
 
   nginx:
-    build: ./frontend
-    ports:
-      - "80:80"
+    image: naniumesh/crud-frontend:latest
+    container_name: nginx
+    restart: always
     depends_on:
       - backend
+    ports:
+      - "80:80"
 
 volumes:
   mongo_data:
