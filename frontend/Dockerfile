@@ -1,14 +1,18 @@
 # Build Angular app
-FROM node:18 AS build
+FROM node:18-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build -- --output-hashing=all
+RUN npm run build --prod
 
-# Serve using Nginx
+# Serve with Nginx
 FROM nginx:alpine
+
+# 🔥 THIS IS CRITICAL
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 COPY --from=build /app/dist/angular-15-crud /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
+
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
